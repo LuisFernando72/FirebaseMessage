@@ -1,12 +1,5 @@
 package com.example.proyectomensajeriaprogra;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ViewPager myViewpager;
@@ -38,14 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference RootRef;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser =mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
         myTablayout = findViewById(R.id.tableLayout);
@@ -69,10 +69,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(currentUser == null){
+        if (currentUser == null) {
             SendUserToLoginActivity();
-        }
-        else{
+        } else {
             VerifyUserExistance();
         }
     }
@@ -82,10 +81,9 @@ public class MainActivity extends AppCompatActivity {
         RootRef.child("Users").child(CurrentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if((snapshot.child("name").exists())){
+                if ((snapshot.child("name").exists())) {
                     Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     SendUserToSettingsActivity();
                 }
             }
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        }) ;
+        });
 
     }
 
@@ -102,27 +100,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.options_menu,menu);
+        getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
-        if(item.getItemId() ==R.id.main_logout_option){
+        if (item.getItemId() == R.id.main_logout_option) {
             mAuth.signOut();
             SendUserToLoginActivity();
         }
 
-        if(item.getItemId() ==R.id.main_create_group_option){
+        if (item.getItemId() == R.id.main_create_group_option) {
             RequestNewGroup();
         }
 
-        if(item.getItemId() ==R.id.main_settings_option){
+        if (item.getItemId() == R.id.main_settings_option) {
             SendUserToSettingsActivity();
         }
-        if(item.getItemId() ==R.id.main_find_friends_option){
-
+        if (item.getItemId() == R.id.main_find_friends_option) {
+            SendUserToFriendsActivity();
         }
         return true;
     }
@@ -138,12 +136,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String groupName= groupNameField.getText().toString();
+                String groupName = groupNameField.getText().toString();
 
-                if(TextUtils.isEmpty(groupName)){
+                if (TextUtils.isEmpty(groupName)) {
                     Toast.makeText(MainActivity.this, "Escribe el nombre del grupo", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     CreateNewGroup(groupName);
                 }
             }
@@ -166,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         RootRef.child("Groups").child(groupName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Se creó exitosamente", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -175,17 +172,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendUserToLoginActivity() {
-        Intent loginIntent =  new Intent(MainActivity.this, LoginActivity.class);
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
-        finish();
 
     }
 
     private void SendUserToSettingsActivity() {
-        Intent settingsIntent =  new Intent(MainActivity.this, SettingsActivity.class);
+        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingsIntent);
-        finish();
+    }
+
+    private void SendUserToFriendsActivity() {
+        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
+
     }
 }

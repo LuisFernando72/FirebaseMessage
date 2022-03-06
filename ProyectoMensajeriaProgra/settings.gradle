@@ -3,6 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+
     }
 }
 dependencyResolutionManagement {
@@ -10,6 +11,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+//VERIFICAR ESTO, ES POSIBLE QUE HAGA INTERFERENCIA CON EL TELEFONO
     }
 }
 rootProject.name = "ProyectoMensajeriaProgra"

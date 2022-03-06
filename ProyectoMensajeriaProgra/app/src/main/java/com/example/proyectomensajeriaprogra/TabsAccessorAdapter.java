@@ -14,8 +14,8 @@ public class TabsAccessorAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    private final ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
-    private final ArrayList<String> fragmentTitle = new ArrayList<>();
+    private final ArrayList<Fragment> fragmentArrayList = new ArrayList<Fragment>();
+    private final ArrayList<String> fragmentTitle = new ArrayList<String>();
 
 
     public TabsAccessorAdapter(@NonNull FragmentManager fm, int behavior) {
